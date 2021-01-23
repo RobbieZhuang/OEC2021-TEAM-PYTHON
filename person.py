@@ -18,3 +18,16 @@ class Person
         self.health_conditions = health_conditions
         self.ecs = ecs
 
+        # Previous, current exposure
+        self.exposure = (0, 0)
+
+        self.exposure_factor
+
+    def expose(self, exposure):
+        self.exposure[1] += (1 - self.exposure[1]) * exposure
+
+    def next_class(self):
+        self.exposure[0] = self.exposure[1]
+
+    def get_exposure(self):
+        return self.exposure[0]
