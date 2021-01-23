@@ -16,7 +16,7 @@ LAST_NAME_EXPOSURE_FACTOR = 1.3
 AVERAGE_TEACHER_AGE = 40
 AVERAGE_TA_AGE = 21
 
-BASELINE_EXPOSURE_FACTOR = 0.03
+BASELINE_EXPOSURE_FACTOR = 0.08
 
 # Chance each occupation exposes another
 # First index from, second index to

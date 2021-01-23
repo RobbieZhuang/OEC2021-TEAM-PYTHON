@@ -45,7 +45,7 @@ def group_by_last_name(people):
     return sets
 
 
-def run_simulation(exposures, people, follow_people=[]):
+def run_simulation(exposures, people, follow_people):
     people_trace = defaultdict(list)
     for p in range(NUM_PERIODS):
         if p == LUNCH_PERIOD:
@@ -61,7 +61,6 @@ def run_simulation(exposures, people, follow_people=[]):
     last_name_grps = group_by_last_name(people)
     for grp in group_by_last_name(people).values():
         exposures["Last Name"].calculate_exposure(list(grp))
-        people_trace[p].append((p.exposure[1], p.trace))
     return people_trace
 
 
@@ -92,6 +91,13 @@ def print_results(people):
         print("%030s: %5.2f" % (p.firstname + " " + p.lastname, 100 * p.exposure[1]))
 
 
+def show_graphs(people):
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    plt.hist([p.get_exposure() for p in population], bins=np.linspace(0.0, 1.0))
+    plt.show()
+
 if __name__ == "__main__":
     population = load_population()
     exposures = initialize_exposures()
@@ -101,3 +107,5 @@ if __name__ == "__main__":
     for p in people_trace:
         print(f"        {p.firstname} {p.lastname}'s trace")
         print(people_trace[p])
+
+    show_graphs(population)
