@@ -17,7 +17,9 @@ class ExposureChance:
         for i in range(len(people)):
             for j in range(len(people)):
                 if i != j:
-                    people[i].expose(
-                        people[j].get_exposure() * \
+                    people[j].expose(
+                        people[i].get_exposure() * \
                         self.exposure_factor * \
-                        (R_0 / len(people)))
+                        (R_0 / len(people)) * \
+                        OCCUPATIONAL_EXPOSURE_MATRIX[people[i].occupation][people[j].occupation]
+                        )

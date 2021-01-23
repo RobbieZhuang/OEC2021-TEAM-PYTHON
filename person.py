@@ -33,8 +33,7 @@ class Person:
             self.age = AVERAGE_TA_AGE
 
         health_exposure_factor = 1.7 if self.health_conditions else 1.0
-        self.exposure_factor = BASELINE_EXPOSURE_FACTOR * \
-            OCCUPATIONAL_EXPOSURE_FACTORS[occupation] * health_exposure_factor * (1 + (self.age / 4))
+        self.exposure_factor = BASELINE_EXPOSURE_FACTOR * health_exposure_factor * (1 + (self.age / 4))
 
     def __str__(self):
         return "Id-{}, Ou-{}, Na-{} {}, Age-{}. Sch-{}, He-{}, Ecs-{}, Inf-{}".format(

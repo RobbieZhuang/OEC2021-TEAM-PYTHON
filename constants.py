@@ -14,12 +14,25 @@ TRANSITION_EXPOSURE_FACTOR = 0.9
 AVERAGE_TEACHER_AGE = 40
 AVERAGE_TA_AGE = 21
 
-# students more likely to interact with one another
-OCCUPATIONAL_EXPOSURE_FACTORS = {
-    Occupation.Student: 1.0,
-    Occupation.Teacher: 0.8,
-    Occupation.TA: 0.9,
-}
+# Chance each occupation exposes another
+# First index from, second index to
+OCCUPATIONAL_EXPOSURE_MATRIX = {
+        Occupation.Student: {
+            Occupation.Student: 1.5,
+            Occupation.Teacher: 0.7,
+            Occupation.TA: 0.8
+        },
+        Occupation.Teacher: {,
+            Occupation.Student: 0.7,
+            Occupation.Teacher: 1.0,
+            Occupation.TA: 1.5
+        },
+        Occupation.TA: {
+            Occupation.Student: 0.8,
+            Occupation.Teacher: 1.5,
+            Occupation.TA: 1.2
+        }
+    }
 
 R_0 = 3
 AVERAGE_EXPOSURES = 100
