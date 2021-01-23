@@ -1,7 +1,8 @@
+from collections import defaultdict
 from constants import *
 
-class Person:
 
+class Person:
     def __init__(
         self,
         occupation: Occupation,
@@ -12,7 +13,7 @@ class Person:
         schedule,
         health_conditions=None,
         ecs=None,
-        initial_exposure=0.0
+        initial_exposure=0.0,
     ):
         self.occupation = occupation
         self.id = id
@@ -33,7 +34,10 @@ class Person:
             self.age = AVERAGE_TA_AGE
 
         health_exposure_factor = 1.7 if self.health_conditions else 1.0
-        self.exposure_factor = BASELINE_EXPOSURE_FACTOR * health_exposure_factor * (1 + (self.age / 4))
+        self.exposure_factor = (
+            BASELINE_EXPOSURE_FACTOR * health_exposure_factor * (1 + (self.age / 4))
+        )
+        self.trace = defaultdict(int)
 
     def __str__(self):
         return "Id-{}, Ou-{}, Na-{} {}, Age-{}. Sch-{}, He-{}, Ecs-{}, Inf-{}".format(
@@ -45,16 +49,25 @@ class Person:
             self.schedule,
             self.health_conditions,
             self.ecs,
-            self.exposure
+            self.exposure,
         )
 
-    def expose(self, exposure):
+    def expose(self, exposure, person=""):
         old = self.exposure[1]
-        diff = (1 - self.exposure[1]) * exposure * self.exposure_factor
-        self.exposure = (self.exposure[0], min(1.0, self.exposure[1] + diff))
+        self.exposure = (
+            self.exposure[0],
+            min(
+                1.0,
+                self.exposure[1]
+                + (1 - self.exposure[1]) * exposure * self.exposure_factor,
+            ),
+        )
+        if (self.exposure[1] - old) > 0.00001:
+            self.trace[person] += (self.exposure[1] - old)
         return self.exposure[1] - old
 
     def next_class(self):
+        self.trace = defaultdict(int)
         self.exposure = (self.exposure[1], self.exposure[1])
 
     def get_exposure(self):
@@ -65,5 +78,9 @@ class Person:
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.id == other.id and self.firstname == other.firstname and self.lastname == other.lastname
+            return (
+                self.id == other.id
+                and self.firstname == other.firstname
+                and self.lastname == other.lastname
+            )
         return False

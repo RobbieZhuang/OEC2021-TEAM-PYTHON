@@ -23,18 +23,6 @@ def initialize_exposures():
 
     return exposures
 
-# def get_class_set(class_, period, students):
-#     class_set = []
-#     for s in students:
-#         if class_ in s.schedule[period]:
-#             class_set.append(s)
-# 
-# def get_class_sets_for_period(period, students):
-#     period_set = {}
-#     for c in CLASSES:
-#         period_set[c] = get_class_set(c, period, students)
-#     for ec in ECS:
-#         period_set[ec] = get_class_set(ec, period, students)
 
 def get_exposure_sets(people, period):
     sets = defaultdict(set)
@@ -44,8 +32,10 @@ def get_exposure_sets(people, period):
         for e in p.schedule[period]:
             sets[e].add(p)
     return sets
-    
-def run_simulation(exposures, people):
+
+
+def run_simulation(exposures, people, follow_people = []):
+    people_trace = defaultdict(list)
     for p in range(NUM_PERIODS):
         if p == LUNCH_PERIOD:
             for e in exposures.values():
@@ -54,6 +44,10 @@ def run_simulation(exposures, people):
         sets = get_exposure_sets(people, p)
         for exposure_name, people_exposed in sets.items():
             exposures[exposure_name].calculate_exposure(list(people_exposed))
+        for p in follow_people:
+            people_trace[p].append((p.exposure[1], p.trace))
+    return people_trace
+
 
 def load_population():
     students = parsers.get_students()
@@ -76,13 +70,18 @@ def load_population():
                         # print(p)
     return students + teachers + tas
 
+
 def print_results(people):
     for p in people:
-        print('%030s: %5.2f' % (p.firstname + ' ' + p.lastname, 100 * p.exposure[1]))
+        print("%030s: %5.2f" % (p.firstname + " " + p.lastname, 100 * p.exposure[1]))
+
 
 if __name__ == "__main__":
     population = load_population()
     exposures = initialize_exposures()
-    run_simulation(exposures, population)
+    people_trace = run_simulation(exposures, population, [])
 
-    #print_results(population)
+    print_results(population)
+    for p in people_trace:
+        print(f"        {p.firstname} {p.lastname}'s trace")
+        print(people_trace[p])
