@@ -5,10 +5,10 @@ class Person:
     def __init__(
         self,
         occupation: Occupation,
-        id: int,
+        id,
         firstname: str,
         lastname: str,
-        grade: int,
+        grade,
         schedule,
         health_conditions=None,
         ecs=None,
@@ -35,7 +35,11 @@ class Person:
         self.exposure_factor = PERSONAL_EXPOSURE_FACTORS[occupation] * (1.5 ** (self.age / 2))
 
     def __str__(self):
+<<<<<<< Updated upstream
         return "Id-{}, Ou-{}, Na-{} {}, Age-{}. Sch-{}, He-{}, Ecs-{}".format(
+=======
+        return "Id-{}, Ou-{}, Na-{} {}, Gr-{}. Sch-{}, He-{}, Ecs-{}, Exp-{}".format(
+>>>>>>> Stashed changes
             self.id,
             self.occupation,
             self.firstname,
@@ -54,3 +58,11 @@ class Person:
 
     def get_exposure(self):
         return self.exposure[0]
+
+    def __hash__(self):
+        return hash(tuple(self.id, self.firstname, self.lastname))
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.id == other.id and self.firstname == other.firstname and self.lastname == other.lastname
+        return False

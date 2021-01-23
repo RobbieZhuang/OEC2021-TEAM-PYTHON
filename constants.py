@@ -9,9 +9,7 @@ class Occupation(Enum):
 # randomly chosen
 CLASS_EXPOSURE_FACTOR = 1.0
 EC_EXPOSURE_FACTOR = 1.1
-
-# transitions are only 5mins while classes are 45mins
-TRANSITION_EXPOSURE_FACTOR = 5.0 / 45.0 * CLASS_EXPOSURE_FACTOR
+TRANSITION_EXPOSURE_FACTOR = 0.9
 
 # students more likely to interact with one another
 PERSONAL_EXPOSURE_FACTORS = {
@@ -19,9 +17,6 @@ PERSONAL_EXPOSURE_FACTORS = {
     Occupation.Teacher: 0.8,
     Occupation.TA: 0.9,
 }
-
-AVERAGE_TEACHER_AGE = 40
-AVERAGE_TA_AGE = 21
 
 R_0 = 3
 AVERAGE_EXPOSURES = 100
