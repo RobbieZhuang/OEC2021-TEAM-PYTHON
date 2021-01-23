@@ -94,7 +94,7 @@ def print_results(people):
 if __name__ == "__main__":
     population = load_population()
     exposures = initialize_exposures()
-    people_trace = run_simulation(exposures, population, [s for s in population if 'Karl' == s.firstname and 'Hackett' == s.lastname])
+    people_trace = run_simulation(exposures, population, [])
 
     print_results(population)
     for p in people_trace:
