@@ -2,7 +2,6 @@
 from exposure import ExposureChance
 import parsers
 
-<<<<<<< Updated upstream
 def initialize_exposures():
     exposures = {}
 
@@ -48,7 +47,6 @@ def run_simluation(exposures, students):
 
     def lunch():
         period_transition()
-=======
 
 # def initialize_exposures():
 #     exposures = {}
@@ -64,14 +62,10 @@ def run_simluation(exposures, students):
 
 #     return exposures
 
->>>>>>> Stashed changes
-
 # def run_simluation(exposures, students):
 #     def have_class():
 #         for e in exposures:
 #             pass 
-
-<<<<<<< Updated upstream
     class_sets = get_class_sets()
 
     period_transition()
@@ -81,13 +75,11 @@ def run_simluation(exposures, students):
     have_class()
     have_class()
     ecs()
-=======
 #     def ecs():
 #         pass
 
 #     def period_transition():
 #         pass
->>>>>>> Stashed changes
 
 #     def lunch():
 #         pass
@@ -104,11 +96,6 @@ def run_simluation(exposures, students):
 #     ecs()
 
 #     show_exposures()
-
-<<<<<<< Updated upstream
-
-    
-=======
 # def show_exposures():
 #     pass
 
@@ -137,4 +124,3 @@ def load_population():
 
 if __name__ == "__main__":
     population = load_population()
->>>>>>> Stashed changes

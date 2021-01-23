@@ -98,16 +98,12 @@ def get_tas(filename="/tests/tas.csv"):
     for idx, row in df.iterrows():
         classes = get_classes(row)
         ta = Person(
-<<<<<<< Updated upstream
-            Occupation.TA, -1, row["First Name"], row["Last Name"], -1, classes
-=======
             Person.Occupation.TA,
             None,
             row["First Name"],
             row["Last Name"],
             None,
             classes
->>>>>>> Stashed changes
         )
         tas.append(ta)
     return tas

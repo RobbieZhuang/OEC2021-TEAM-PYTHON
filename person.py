@@ -35,11 +35,7 @@ class Person:
         self.exposure_factor = PERSONAL_EXPOSURE_FACTORS[occupation] * (1.5 ** (self.age / 2))
 
     def __str__(self):
-<<<<<<< Updated upstream
         return "Id-{}, Ou-{}, Na-{} {}, Age-{}. Sch-{}, He-{}, Ecs-{}".format(
-=======
-        return "Id-{}, Ou-{}, Na-{} {}, Gr-{}. Sch-{}, He-{}, Ecs-{}, Exp-{}".format(
->>>>>>> Stashed changes
             self.id,
             self.occupation,
             self.firstname,
