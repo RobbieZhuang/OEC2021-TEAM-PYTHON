@@ -55,7 +55,7 @@ def get_exposure_sets(people, period):
     return sets
 
 def clear_screen(screen):
-    screen.fill((255, 255, 255))
+    screen.fill((227,253,253))
 
 def init_ui(screen):
     clear_screen(screen)
@@ -63,20 +63,26 @@ def init_ui(screen):
 def get_class_locations():
     class_locations = {}
     total_classes = len(CLASSES)
-    classrooms_per_row = math.sqrt(total_classes)
+    rooms_per_row = math.sqrt(total_classes)
     for i in range(0, total_classes):
-        class_locations[CLASSES[i]] = [int(WINDOW_SIZE/classrooms_per_row) * (i % classrooms_per_row) + 100, int(i / classrooms_per_row) * 100 + 50]
+        class_locations[CLASSES[i]] = [int(WINDOW_SIZE/rooms_per_row) * (i % rooms_per_row) + 100, int(i / rooms_per_row) * 100 + 50]
 
-    # TODO: Add club location
-    class_locations["Clubs"] = [500, 700]
+    total_clubs = len(ECS)
+    for i in range(0, total_clubs):
+        class_locations[ECS[i]] = [int(WINDOW_SIZE/rooms_per_row) * (i % rooms_per_row) + 100, 950 - int(i / rooms_per_row) * 100]
 
     return class_locations
 
 def draw_rooms(class_locations, screen):
     for key in class_locations:
+        center = class_locations[key]
+
+        WIDTH = 190
+        HEIGHT = 80
+        pygame.draw.rect(screen, (203,241,245), (center[0] - WIDTH/2, center[1] - HEIGHT/2, WIDTH, HEIGHT), border_radius = 5)
         font = pygame.font.Font(None, 22)
-        text = font.render(key, True, (0, 0, 0))
-        text_rect = text.get_rect(center=class_locations[key])
+        text = font.render(key, True, (11, 20, 20))
+        text_rect = text.get_rect(center=center)
         screen.blit(text, text_rect)
 
 def distance(d_x, d_y):
@@ -122,6 +128,9 @@ def animate(population, cur_period, class_locations, screen):
                     p.location_in_ui = get_next_location(p.location_in_ui, next_loc)
                     if p.location_in_ui != next_loc:
                         should_continue_drawing = True
+            else:
+                offscreen = [500, -10]
+                p.location_in_ui = get_next_location(p.location_in_ui, offscreen)
             draw(p, screen)
 
         pygame.display.flip()

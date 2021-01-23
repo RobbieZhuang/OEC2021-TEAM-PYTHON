@@ -14,7 +14,7 @@ class Person:
         health_conditions=None,
         ecs=None,
         initial_exposure=0.0,
-        location_in_ui=[500,500],
+        location_in_ui=[500, -10],
     ):
         self.occupation = occupation
         self.id = id
