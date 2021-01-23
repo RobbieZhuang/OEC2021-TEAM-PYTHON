@@ -1,5 +1,6 @@
 from constants import *
 from exposure import ExposureChance
+from collections import defaultdict
 import parsers
 
 def initialize_exposures():
@@ -17,35 +18,31 @@ def initialize_exposures():
 
     return exposures
 
-def get_class_set(class_, period, students):
-    class_set = []
-    for s in students:
-        if class_ in s.schedule[period]:
-            class_set.append(s)
+# def get_class_set(class_, period, students):
+#     class_set = []
+#     for s in students:
+#         if class_ in s.schedule[period]:
+#             class_set.append(s)
+# 
+# def get_class_sets_for_period(period, students):
+#     period_set = {}
+#     for c in CLASSES:
+#         period_set[c] = get_class_set(c, period, students)
+#     for ec in ECS:
+#         period_set[ec] = get_class_set(ec, period, students)
 
-def get_class_sets_for_period(period, students):
-    period_set = {}
-    for c in CLASSES:
-        period_set[c] = get_class_set(c, period, students)
-    for ec in ECS:
-        period_set[ec] = get_class_set(ec, period, students)
-
-def get_class_sets(students):
-    sets = {}
-    for p in range(NUM_PERIODS):
-        sets[p] = get_class_sets_for_period(p, students)
+def get_exposure_sets(exposures, people, period):
+    sets = defaultdict(set)
+    for p in people:
+        for e in p.schedule:
+            sets[e].add(p)
     return sets
     
-def run_simluation(exposures, students):
-    class_sets = get_class_sets()
-    transition = True
+def run_simluation(exposures, people):
     for p in range(NUM_PERIODS):
-        for class_ in class_sets[p]:
-            if transition:
-                exposures[class_ + ' Transition'].calculate_exposure(class_sets[p][class_])
-            else:
-                exposures[class_].calculate_exposure(class_sets[p][class_])
-        transition ^= True
+        sets = get_exposure_sets(exposures, people, period)
+        for exposure_name, people_exposed in sets.items():
+            exposures[exposure_name].calculate_exposure(people_exposed)
 
 def load_population():
     students = parsers.get_students()
@@ -71,3 +68,5 @@ def load_population():
 
 if __name__ == "__main__":
     population = load_population()
+    exposures = initialize_exposures()
+    run_simulation(exposures, population)
