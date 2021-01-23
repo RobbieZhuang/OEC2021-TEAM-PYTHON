@@ -22,30 +22,25 @@ class Person:
         self.schedule = schedule
         self.health_conditions = health_conditions
         self.ecs = ecs
+        self.grade = grade
 
         # Previous, current exposure
         self.exposure = (initial_exposure, initial_exposure)
 
-        if occupation == Occupation.Student:
-            self.age = grade + 5
-        elif occupation == Occupation.Teacher:
-            self.age = AVERAGE_TEACHER_AGE
-        elif occupation == Occupation.TA:
-            self.age = AVERAGE_TA_AGE
-
         health_exposure_factor = 1.7 if self.health_conditions else 1.0
+        age_exposure_factor = 1.0 if grade is None else 1.0 + ((grade - 9) / 4.0)
         self.exposure_factor = (
-            BASELINE_EXPOSURE_FACTOR * health_exposure_factor * (1 + (self.age / 4))
+            BASELINE_EXPOSURE_FACTOR * health_exposure_factor * age_exposure_factor 
         )
         self.trace = defaultdict(int)
 
     def __str__(self):
-        return "Id-{}, Ou-{}, Na-{} {}, Age-{}. Sch-{}, He-{}, Ecs-{}, Inf-{}".format(
+        return "Id-{}, Ou-{}, Na-{} {}, Gr-{}. Sch-{}, He-{}, Ecs-{}, Inf-{}".format(
             self.id,
             self.occupation,
             self.firstname,
             self.lastname,
-            self.age,
+            self.grade,
             self.schedule,
             self.health_conditions,
             self.ecs,

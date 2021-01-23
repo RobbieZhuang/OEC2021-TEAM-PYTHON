@@ -19,7 +19,7 @@ class Graph():
 
     def show(self):
         plt.figure()
+        plt.title(self.name)
         for name, series in self.data.items():
             plt.plot(series.x, series.y, label=name)
         plt.legend()
-        plt.show()

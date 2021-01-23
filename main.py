@@ -4,13 +4,18 @@ from collections import defaultdict
 import parsers
 from graph import Graph
 
-infection_over_time = Graph('Infection Over Time')
+student_inf_over_time = Graph('Average Student Infection Over Time')
+infection_over_time = Graph('Average Infection Over Time')
+classroom_infection_over_time = Graph('Average Classroom Infection Over Time')
 
 def initialize_exposures():
     exposures = {}
 
     for c in CLASSES:
-        exposures[c] = ExposureChance(c, CLASS_EXPOSURE_FACTOR)
+        if 'Lunch' in c:
+            exposures[c] = ExposureChance(c, LUNCH_EXPOSURE_FACTOR)
+        else:
+            exposures[c] = ExposureChance(c, CLASS_EXPOSURE_FACTOR)
         transition = c + " Transition"
         exposures[transition] = ExposureChance(
             transition, TRANSITION_EXPOSURE_FACTOR, False
@@ -47,7 +52,7 @@ def group_by_last_name(people):
     return sets
 
 
-def update_graphs(time, people):
+def update_graphs(time, exposures, people):
     all_inf = [person.exposure[1] for person in people]
     teach_inf = [person.exposure[1] for person in people if person.occupation == Occupation.Teacher]
     ta_inf = [person.exposure[1] for person in people if person.occupation == Occupation.TA]
@@ -60,14 +65,31 @@ def update_graphs(time, people):
         'students': sum(stud_inf) / len(stud_inf),
         })
 
+    gr_9 = [person.exposure[1] for person in people if person.grade == 9]
+    gr_10 = [person.exposure[1] for person in people if person.grade == 10]
+    gr_11 = [person.exposure[1] for person in people if person.grade == 11]
+    gr_12 = [person.exposure[1] for person in people if person.grade == 12]
+
+    student_inf_over_time.add_point(time, {
+        'Gr 9': sum(gr_9) / len(gr_9),
+        'Gr 10': sum(gr_10) / len(gr_10),
+        'Gr 11': sum(gr_11) / len(gr_11),
+        'Gr 12': sum(gr_12) / len(gr_12),
+        })
+
+    cl = [e.exposure_factor for e in exposures.values() if e.is_class]
+    classroom_infection_over_time.add_point(time, {
+        'all': sum(cl) / len(cl)
+        })
+
 def run_simulation(exposures, people, follow_people):
     people_trace = defaultdict(list)
     for p in range(NUM_PERIODS):
-        update_graphs(START_TIMES[p], people)
-
         if p == LUNCH_PERIOD:
             for e in exposures.values():
                 e.clean()
+
+        update_graphs(START_TIMES[p], exposures, people)
 
         sets = get_exposure_sets(people, p)
         for exposure_name, people_exposed in sets.items():
@@ -113,6 +135,10 @@ def show_graphs(people):
     import numpy as np
 
     infection_over_time.show()
+    student_inf_over_time.show()
+    classroom_infection_over_time.show()
+
+    plt.show()
 
 if __name__ == "__main__":
     population = load_population()
