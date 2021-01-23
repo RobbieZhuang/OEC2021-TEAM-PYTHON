@@ -12,7 +12,7 @@ EC_EXPOSURE_FACTOR = 1.1
 TRANSITION_EXPOSURE_FACTOR = 0.9
 
 # students more likely to interact with one another
-PERSONAL_EXPOSURE_FACTORS = {
+OCCUPATIONAL_EXPOSURE_FACTORS = {
     Occupation.Student: 1.0,
     Occupation.Teacher: 0.8,
     Occupation.TA: 0.9,

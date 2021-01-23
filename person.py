@@ -32,7 +32,9 @@ class Person:
         elif occupation == Occupation.TA:
             self.age = AVERAGE_TA_AGE
 
-        self.exposure_factor = PERSONAL_EXPOSURE_FACTORS[occupation] * (1.5 ** (self.age / 2))
+        health_exposure_factor = 1.7 if self.health_conditions else 1.0
+        self.exposure_factor = BASELINE_EXPOSURE_FACTOR * \
+            OCCUPATIONAL_EXPOSURE_FACTORS[occupation] * health_exposure_factor * (1 + (self.age / 4))
 
     def __str__(self):
         return "Id-{}, Ou-{}, Na-{} {}, Age-{}. Sch-{}, He-{}, Ecs-{}".format(
@@ -47,7 +49,8 @@ class Person:
         )
 
     def expose(self, exposure):
-        self.exposure[1] += (1 - self.exposure[1]) * exposure
+        self.exposure[1] += (1 - self.exposure[1]) * exposure * self.exposure_factor
+        self.exposure[1] = min(self.exposure[1], 1.0)
 
     def next_class(self):
         self.exposure[0] = self.exposure[1]
