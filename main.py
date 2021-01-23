@@ -5,6 +5,9 @@ import parsers
 import pygame
 import random
 import math
+import time
+import sys
+from copy import deepcopy
 from graph import Graph
 
 student_inf_over_time = Graph('Average Student Infection Over Time')
@@ -89,32 +92,37 @@ def get_next_location(cur_location, final_location):
     else:
         return final_location
 
-def draw(location, class_locations, screen):
+def new_frame(class_locations, screen):
     # Clear the screen
     clear_screen(screen)
-
-    # Draw and add room label text
     draw_rooms(class_locations, screen)
 
+def draw(person, screen):
     # Draw a dot for a person
-    pygame.draw.circle(screen, (0, 0, 255), location, 5)
-
-    # Render
-    pygame.display.flip()
+    pygame.draw.circle(screen, (255 * person.exposure[1], 0, 255 * (1 - person.exposure[1])), person.location_in_ui, 6)
 
 def animate(population, cur_period, class_locations, screen):
     should_continue_drawing = True
     while should_continue_drawing:
+        new_frame(class_locations, screen)
+
         should_continue_drawing = False
         for p in population:
             if cur_period < len(p.schedule):
                 if p.schedule[cur_period] and p.schedule[cur_period][0] in class_locations:
-                    next_loc = class_locations[p.schedule[cur_period][0]]
+                    next_loc = deepcopy(class_locations[p.schedule[cur_period][0]])
+
+                    # Choose a random offset for ourselves
+                    random.seed(hash(p))
+                    next_loc[0] += random.randint(-50, 50)
+                    next_loc[1] += random.randint(-20, 20)
+
                     p.location_in_ui = get_next_location(p.location_in_ui, next_loc)
                     if p.location_in_ui != next_loc:
                         should_continue_drawing = True
-            draw(p.location_in_ui, class_locations, screen)
-    print(population[0].location_in_ui)
+            draw(p, screen)
+
+        pygame.display.flip()
 
     # Transition students to the new room in the given period
 
@@ -158,65 +166,44 @@ def update_graphs(time, exposures, people):
 
 def run_simulation(exposures, people, follow_people):
     if VISUALIZATIONS_ENABLED:
-        people_trace = defaultdict(list)
-
-        ### Start of UI Code
         pygame.init()
         screen = pygame.display.set_mode([WINDOW_SIZE, WINDOW_SIZE])
         init_ui(screen)
         class_locations = get_class_locations()
-        print("RBZ", "Hallening")
-        sim_running = True
-        # Game Loop
-        while sim_running:
-            for p in range(NUM_PERIODS):
-                if p == LUNCH_PERIOD:
-                    for e in exposures.values():
-                        e.clean()
 
-                update_graphs(START_TIMES[p], exposures, people)
+    people_trace = defaultdict(list)
+    for p in range(NUM_PERIODS):
+        if p == LUNCH_PERIOD:
+            for e in exposures.values():
+                e.clean()
 
-                sets = get_exposure_sets(people, p)
-                for exposure_name, people_exposed in sets.items():
-                    exposures[exposure_name].calculate_exposure(list(people_exposed))
+        update_graphs(START_TIMES[p], exposures, people)
 
-                for p in follow_people:
-                    people_trace[p].append((p.exposure[1], p.trace))
+        sets = get_exposure_sets(people, p)
+        for exposure_name, people_exposed in sets.items():
+            exposures[exposure_name].calculate_exposure(list(people_exposed))
+        for p in follow_people:
+            people_trace[p].append((p.exposure[1], p.trace))
 
-                ### UI Updates
-                # Detect close from window
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        sim_running = False
-                # Render current state
-                animate(population, p, class_locations, screen)
+        if VISUALIZATIONS_ENABLED and p % 2 == 1:
+            ### UI Updates
+            # Detect close from window
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit(0)
 
+            # Render current state
+            animate(population, p, class_locations, screen)
+            time.sleep(1)
+
+    if VISUALIZATIONS_ENABLED:
         # Quit window
         pygame.quit()
 
-        last_name_grps = group_by_last_name(people)
-        for grp in group_by_last_name(people).values():
-            exposures["Last Name"].calculate_exposure(list(grp))
-        return people_trace
-    else:
-        people_trace = defaultdict(list)
-        for p in range(NUM_PERIODS):
-            if p == LUNCH_PERIOD:
-                for e in exposures.values():
-                    e.clean()
-
-            update_graphs(START_TIMES[p], exposures, people)
-
-            sets = get_exposure_sets(people, p)
-            for exposure_name, people_exposed in sets.items():
-                exposures[exposure_name].calculate_exposure(list(people_exposed))
-            for p in follow_people:
-                people_trace[p].append((p.exposure[1], p.trace))
-
-        last_name_grps = group_by_last_name(people)
-        for grp in group_by_last_name(people).values():
-            exposures["Last Name"].calculate_exposure(list(grp))
-        return people_trace
+    last_name_grps = group_by_last_name(people)
+    for grp in group_by_last_name(people).values():
+        exposures["Last Name"].calculate_exposure(list(grp))
+    return people_trace
 
 def load_population():
     students = parsers.get_students()

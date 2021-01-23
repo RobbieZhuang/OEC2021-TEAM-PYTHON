@@ -34,8 +34,8 @@ class ExposureChance:
             room_exposure = sum([p.get_exposure() for p in people]) / len(people)
             self.exposure_factor *= 1.0 + room_exposure / 2.0
 
-        if exposure > 1.0:
-            print(f"OUTBREAK in {self.name}")
+        # if exposure > 1.0:
+        #     print(f"OUTBREAK in {self.name}")
 
     def clean(self):
         self.exposure_factor = self.base_exposure_factor
