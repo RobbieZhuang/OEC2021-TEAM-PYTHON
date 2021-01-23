@@ -1,6 +1,5 @@
 from constants import *
 
-
 class ExposureChance:
     def __init__(self, name, exposure_factor, is_class=True):
         self.name = name

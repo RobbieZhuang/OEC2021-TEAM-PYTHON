@@ -9,7 +9,8 @@ class Occupation(Enum):
 
 
 CLASS_EXPOSURE_FACTOR = 1.0
-LUNCH_EXPOSURE_FACTOR = 0.5
+LUNCH_EXPOSURE_FACTOR = 0.5 # People usually separate into small groups, so they are unlikely to all interact
+TA_LUNCH_EXPOSURE_FACTOR = 0.0 # TAs eat alone apparently
 EC_EXPOSURE_FACTOR = 1.1
 TRANSITION_EXPOSURE_FACTOR = 5.0 / 45.0 * CLASS_EXPOSURE_FACTOR
 LAST_NAME_EXPOSURE_FACTOR = 1.3

@@ -12,7 +12,9 @@ def initialize_exposures():
     exposures = {}
 
     for c in CLASSES:
-        if 'Lunch' in c:
+        if 'TA Lunch' in c:
+            exposures[c] = ExposureChance(c, TA_LUNCH_EXPOSURE_FACTOR)
+        elif 'Lunch' in c:
             exposures[c] = ExposureChance(c, LUNCH_EXPOSURE_FACTOR)
         else:
             exposures[c] = ExposureChance(c, CLASS_EXPOSURE_FACTOR)
