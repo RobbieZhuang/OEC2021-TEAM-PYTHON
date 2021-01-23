@@ -1,6 +1,6 @@
 from itertools import product
 from enum import Enum
-
+from datetime import datetime, timedelta
 
 class Occupation(Enum):
     Student = 0
@@ -44,6 +44,19 @@ NUM_PERIODS = (
     6 * 2
 ) + 1  # 4 classes, lunch, ecs, transitions between, before, and after
 LUNCH_PERIOD = 5
+
+START_TIMES = []
+_time = datetime.now().replace(hour=8, minute=55, second=0, microsecond=0, tzinfo=None)
+
+_transition = True
+for i in range(NUM_PERIODS):
+    START_TIMES.append(_time)
+    if _transition:
+        _time += timedelta(minutes=5)
+    else:
+        _time += timedelta(minutes=45)
+
+    _transition = not _transition
 
 CLASSES = [
     f"{cl} {sec}"

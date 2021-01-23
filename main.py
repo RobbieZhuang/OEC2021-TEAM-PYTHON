@@ -2,7 +2,9 @@ from constants import *
 from exposure import ExposureChance
 from collections import defaultdict
 import parsers
+from graph import Graph
 
+infection_over_time = Graph('Infection Over Time')
 
 def initialize_exposures():
     exposures = {}
@@ -45,9 +47,24 @@ def group_by_last_name(people):
     return sets
 
 
+def update_graphs(time, people):
+    all_inf = [person.exposure[1] for person in people]
+    teach_inf = [person.exposure[1] for person in people if person.occupation == Occupation.Teacher]
+    ta_inf = [person.exposure[1] for person in people if person.occupation == Occupation.TA]
+    stud_inf = [person.exposure[1] for person in people if person.occupation == Occupation.Student]
+
+    infection_over_time.add_point(time, {
+        'all': sum(all_inf) / len(all_inf),
+        'teachers': sum(teach_inf) / len(teach_inf),
+        'TAs': sum(ta_inf) / len(ta_inf),
+        'students': sum(stud_inf) / len(stud_inf),
+        })
+
 def run_simulation(exposures, people, follow_people):
     people_trace = defaultdict(list)
     for p in range(NUM_PERIODS):
+        update_graphs(START_TIMES[p], people)
+
         if p == LUNCH_PERIOD:
             for e in exposures.values():
                 e.clean()
@@ -95,8 +112,7 @@ def show_graphs(people):
     import matplotlib.pyplot as plt
     import numpy as np
 
-    plt.hist([p.get_exposure() for p in population], bins=np.linspace(0.0, 1.0))
-    plt.show()
+    infection_over_time.show()
 
 if __name__ == "__main__":
     population = load_population()
