@@ -23,5 +23,6 @@ class ExposureChance:
                         * (R_0 / len(people))
                         * OCCUPATIONAL_EXPOSURE_MATRIX[people[i].occupation][
                             people[j].occupation
-                        ]
+                        ],
+                        f"{people[i].firstname} {people[i].lastname}"
                     )

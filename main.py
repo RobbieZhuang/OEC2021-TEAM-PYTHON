@@ -34,11 +34,15 @@ def get_exposure_sets(exposures, people, period):
     return sets
 
 
-def run_simulation(exposures, people):
+def run_simulation(exposures, people, follow_people = []):
+    people_trace = defaultdict(list)
     for p in range(NUM_PERIODS):
         sets = get_exposure_sets(exposures, people, p)
         for exposure_name, people_exposed in sets.items():
             exposures[exposure_name].calculate_exposure(list(people_exposed))
+        for p in follow_people:
+            people_trace[p].append((p.exposure[1], p.trace))
+    return people_trace
 
 
 def load_population():
@@ -71,6 +75,9 @@ def print_results(people):
 if __name__ == "__main__":
     population = load_population()
     exposures = initialize_exposures()
-    run_simulation(exposures, population)
+    people_trace = run_simulation(exposures, population, [])
 
     print_results(population)
+    for p in people_trace:
+        print(f"        {p.firstname} {p.lastname}'s trace")
+        print(people_trace[p])

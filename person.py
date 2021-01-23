@@ -1,3 +1,4 @@
+from collections import defaultdict
 from constants import *
 
 
@@ -36,6 +37,7 @@ class Person:
         self.exposure_factor = (
             BASELINE_EXPOSURE_FACTOR * health_exposure_factor * (1 + (self.age / 4))
         )
+        self.trace = defaultdict(int)
 
     def __str__(self):
         return "Id-{}, Ou-{}, Na-{} {}, Age-{}. Sch-{}, He-{}, Ecs-{}, Inf-{}".format(
@@ -50,7 +52,8 @@ class Person:
             self.exposure,
         )
 
-    def expose(self, exposure):
+    def expose(self, exposure, person=""):
+        old = self.exposure[1]
         self.exposure = (
             self.exposure[0],
             min(
@@ -59,8 +62,11 @@ class Person:
                 + (1 - self.exposure[1]) * exposure * self.exposure_factor,
             ),
         )
+        if (self.exposure[1] - old) > 0.00001:
+            self.trace[person] += (self.exposure[1] - old)
 
     def next_class(self):
+        self.trace = defaultdict(int)
         self.exposure = (self.exposure[1], self.exposure[1])
 
     def get_exposure(self):
