@@ -11,6 +11,7 @@ from copy import deepcopy
 from graph import Graph
 import matplotlib.pyplot as plt
 import numpy as np
+import argparse
 
 student_inf_over_time = Graph('Average Student Infection Over Time')
 infection_over_time = Graph('Average Infection Over Time')
@@ -212,12 +213,12 @@ def run_simulation(exposures, people, follow_people):
         exposures["Last Name"].calculate_exposure(list(grp))
     return people_trace
 
-def load_population():
-    students = parsers.get_students()
-    teachers = parsers.get_teachers()
-    tas = parsers.get_tas()
+def load_population(students, teachers, tas, infects):
+    students = parsers.get_students(students)
+    teachers = parsers.get_teachers(teachers)
+    tas = parsers.get_tas(tas)
 
-    infects = parsers.get_infects()
+    infects = parsers.get_infects(infects)
 
     for infect in infects:
         if infect.id is None:
@@ -247,7 +248,18 @@ def show_graphs(people):
     plt.show()
 
 if __name__ == "__main__":
-    population = load_population()
+    parser = argparse.ArgumentParser(description='Simulate transmission of ZBY1 in a school')
+    parser.add_argument('--students', metavar='FILE', type=str, default='tests/students.csv', help='CSV to load student data from')
+    parser.add_argument('--teachers', metavar='FILE', type=str, default='tests/teachers.csv', help='CSV to load teacher data from')
+    parser.add_argument('--tas', metavar='FILE', type=str, default='tests/tas.csv', help='CSV to load TA data from')
+    parser.add_argument('--infects', metavar='FILE', type=str, default='tests/infects.csv', help='CSV to load infection data from')
+    parser.add_argument('-v', '--visualize', action='store_true', help='Visualize transmissions using pygame')
+
+    args = parser.parse_args()
+
+    VISUALIZATIONS_ENABLED = args.visualize
+
+    population = load_population(args.students, args.teachers, args.tas, args.infects)
     exposures = initialize_exposures()
     people_trace = run_simulation(exposures, population, [])
 
