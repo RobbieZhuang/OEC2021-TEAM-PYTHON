@@ -10,7 +10,7 @@ class ExposureChance:
     def calculate_exposure(self, people):
         # Update incubation period for each person
         for p in people:
-            if is_class:
+            if self.is_class:
                 p.next_class()
 
         # Perform pairwise exposure calculations between people
