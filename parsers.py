@@ -65,14 +65,23 @@ def get_teachers(filename="/tests/teachers.csv"):
     df = read_from_csv(filename)
     teachers = []
     for idx, row in df.iterrows():
-        classes = [row["Class"]]
+        cl = row["Class"]
+
+        schedule = [[]]
+        for i in range(5):
+            # Teachers always teach the same class every period
+            schedule.append([classes[0]])
+
+            # Teachers don't transition
+            schedule.append([])
+
         teach = Person(
             Occupation.Teacher,
             row["Teacher Number"],
             row["First Name"],
             row["Last Name"],
             None,
-            classes
+            schedule
         )
         teachers.append(teach)
     return teachers
@@ -98,13 +107,29 @@ def get_tas(filename="/tests/tas.csv"):
     tas = []
     for idx, row in df.iterrows():
         classes = get_classes(row)
+        schedule = []
+
+        classes.insert(2, f'TA Lunch')
+
+        for i in range(len(classes)):
+            transition = []
+            if i > 0:
+                transition.append(f'{classes[i - 1]} Transition')
+            transition.append(f'{classes[i]} Transition')
+            schedule.append(transition)
+
+            schedule.append([classes[i]])
+
+            if i == len(classes) - 1:
+                schedule.append([f'{classes[i]} Transition'])
+
         ta = Person(
             Occupation.TA,
             None,
             row["First Name"],
             row["Last Name"],
             None,
-            classes
+            schedule
         )
         tas.append(ta)
     return tas
