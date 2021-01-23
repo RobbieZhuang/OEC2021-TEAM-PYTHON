@@ -81,9 +81,10 @@ def get_infects(filename="/tests/infects.csv"):
     df = read_from_csv(filename)
     infects = []
     for idx, row in df.iterrows():
+        student_id = row["Student ID"]
         infected = Person(
-            Occupation.Student,
-            row["Student ID"],
+            Occupation.TA,
+            student_id,
             row["First Name"],
             row["Last Name"],
             None,
@@ -98,7 +99,7 @@ def get_tas(filename="/tests/tas.csv"):
     for idx, row in df.iterrows():
         classes = get_classes(row)
         ta = Person(
-            Person.Occupation.TA,
+            Occupation.TA,
             None,
             row["First Name"],
             row["Last Name"],

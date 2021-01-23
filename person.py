@@ -37,7 +37,7 @@ class Person:
             OCCUPATIONAL_EXPOSURE_FACTORS[occupation] * health_exposure_factor * (1 + (self.age / 4))
 
     def __str__(self):
-        return "Id-{}, Ou-{}, Na-{} {}, Age-{}. Sch-{}, He-{}, Ecs-{}".format(
+        return "Id-{}, Ou-{}, Na-{} {}, Age-{}. Sch-{}, He-{}, Ecs-{}, Inf-{}".format(
             self.id,
             self.occupation,
             self.firstname,
@@ -46,6 +46,7 @@ class Person:
             self.schedule,
             self.health_conditions,
             self.ecs,
+            self.exposure
         )
 
     def expose(self, exposure):
