@@ -15,17 +15,20 @@ class Person
         self.id = id
         self.firstname = firstname
         self.lastname = lastname
-        self.grade = grade
         self.schedule = schedule
-        self.health_conditions = health_conditions
         self.ecs = ecs
 
         # Previous, current exposure
         self.exposure = (initial_exposure, initial_exposure)
 
-        self.age 
+        if type == Type.Student:
+            self.age = self.grade + 5
+        elif type == Type.Teacher:
+            self.age = AVERAGE_TEACHER_AGE
+        elif type == Type.TA
+            self.age = AVERAGE_TA_AGE
 
-        self.exposure_factor = PERSONAL_EXPOSURE_FACTORS[type]
+        self.exposure_factor = PERSONAL_EXPOSURE_FACTORS[type] * (1.5 ** (self.age / 2))
 
     def expose(self, exposure):
         self.exposure[1] += (1 - self.exposure[1]) * exposure
