@@ -12,10 +12,11 @@ def read_from_csv(filename):
 
 
 def get_classes(dfrow, periods=4):
-        classes = []
-        for period in range(1, periods+1):
-            classes.append(dfrow["Period {} Class".format(period)])
-        return classes
+    classes = []
+    for period in range(1, periods + 1):
+        classes.append(dfrow["Period {} Class".format(period)])
+    return classes
+
 
 def get_students(filename="/tests/students.csv"):
     df = read_from_csv(filename)
@@ -29,14 +30,14 @@ def get_students(filename="/tests/students.csv"):
         for i in range(len(classes)):
             transition = []
             if i > 0:
-                transition.append(f'{classes[i - 1]} Transition')
-            transition.append(f'{classes[i]} Transition')
+                transition.append(f"{classes[i - 1]} Transition")
+            transition.append(f"{classes[i]} Transition")
             schedule.append(transition)
 
             schedule.append([classes[i]])
 
             if i == len(classes) - 1:
-                schedule.append([f'{classes[i]} Transition'])
+                schedule.append([f"{classes[i]} Transition"])
 
         ecs = None
         if row["Extracurricular Activities"] is not None:
@@ -44,9 +45,9 @@ def get_students(filename="/tests/students.csv"):
 
         if ecs:
             for ec in ecs:
-                schedule[-1].append(f'{ec} Transition')
+                schedule[-1].append(f"{ec} Transition")
             schedule.append(ecs)
-            schedule.append([ec + ' Transition' for ec in ecs])
+            schedule.append([ec + " Transition" for ec in ecs])
 
         student = Person(
             Occupation.Student,
@@ -60,6 +61,7 @@ def get_students(filename="/tests/students.csv"):
         )
         students.append(student)
     return students
+
 
 def get_teachers(filename="/tests/teachers.csv"):
     df = read_from_csv(filename)
@@ -81,10 +83,11 @@ def get_teachers(filename="/tests/teachers.csv"):
             row["First Name"],
             row["Last Name"],
             None,
-            schedule
+            schedule,
         )
         teachers.append(teach)
     return teachers
+
 
 def get_infects(filename="/tests/infects.csv"):
     df = read_from_csv(filename)
@@ -92,15 +95,11 @@ def get_infects(filename="/tests/infects.csv"):
     for idx, row in df.iterrows():
         student_id = row["Student ID"]
         infected = Person(
-            Occupation.TA,
-            student_id,
-            row["First Name"],
-            row["Last Name"],
-            None,
-            []
+            Occupation.TA, student_id, row["First Name"], row["Last Name"], None, []
         )
         infects.append(infected)
     return infects
+
 
 def get_tas(filename="/tests/tas.csv"):
     df = read_from_csv(filename)
@@ -109,27 +108,22 @@ def get_tas(filename="/tests/tas.csv"):
         classes = get_classes(row)
         schedule = []
 
-        classes.insert(2, f'TA Lunch')
+        classes.insert(2, f"TA Lunch")
 
         for i in range(len(classes)):
             transition = []
             if i > 0:
-                transition.append(f'{classes[i - 1]} Transition')
-            transition.append(f'{classes[i]} Transition')
+                transition.append(f"{classes[i - 1]} Transition")
+            transition.append(f"{classes[i]} Transition")
             schedule.append(transition)
 
             schedule.append([classes[i]])
 
             if i == len(classes) - 1:
-                schedule.append([f'{classes[i]} Transition'])
+                schedule.append([f"{classes[i]} Transition"])
 
         ta = Person(
-            Occupation.TA,
-            None,
-            row["First Name"],
-            row["Last Name"],
-            None,
-            schedule
+            Occupation.TA, None, row["First Name"], row["Last Name"], None, schedule
         )
         tas.append(ta)
     return tas
