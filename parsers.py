@@ -11,10 +11,11 @@ def read_from_csv(filename):
 
 
 def get_classes(dfrow, periods=4):
-        classes = []
-        for period in range(1, periods+1):
-            classes.append(dfrow["Period {} Class".format(period)])
-        return classes
+    classes = []
+    for period in range(1, periods + 1):
+        classes.append(dfrow["Period {} Class".format(period)])
+    return classes
+
 
 def get_students(filename="/tests/students.csv"):
     df = read_from_csv(filename)
@@ -37,6 +38,7 @@ def get_students(filename="/tests/students.csv"):
         students.append(student)
     return students
 
+
 def get_teachers(filename="/tests/teachers.csv"):
     df = read_from_csv(filename)
     teachers = []
@@ -49,10 +51,11 @@ def get_teachers(filename="/tests/teachers.csv"):
             row["First Name"],
             row["Last Name"],
             grade,
-            classes
+            classes,
         )
         teachers.append(teach)
     return teachers
+
 
 def get_infects(filename="/tests/infects.csv"):
     df = read_from_csv(filename)
@@ -65,10 +68,11 @@ def get_infects(filename="/tests/infects.csv"):
             row["First Name"],
             row["Last Name"],
             -1,
-            []
+            [],
         )
         infects.append(infected)
     return infects
+
 
 def get_tas(filename="/tests/tas.csv"):
     df = read_from_csv(filename)
@@ -77,12 +81,7 @@ def get_tas(filename="/tests/tas.csv"):
     for idx, row in df.iterrows():
         classes = get_classes(row)
         ta = Person(
-            Person.Occupation.TA,
-            -1,
-            row["First Name"],
-            row["Last Name"],
-            -1,
-            classes
+            Person.Occupation.TA, -1, row["First Name"], row["Last Name"], -1, classes
         )
         tas.append(ta)
     return tas

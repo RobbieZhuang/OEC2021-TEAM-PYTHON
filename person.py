@@ -26,6 +26,9 @@ class Person:
         self.schedule = schedule
         self.health_conditions = health_conditions
         self.ecs = ecs
+        # Previous, current exposure
+        self.exposure = (0, 0)
+        self.exposure_factor
 
     def __str__(self):
         return "Id-{}, Ou-{}, Na-{} {}, Gr-{}. Sch-{}, He-{}, Ecs-{}".format(
@@ -38,3 +41,13 @@ class Person:
             self.health_conditions,
             self.ecs,
         )
+
+    def expose(self, exposure):
+        self.exposure[1] += (1 - self.exposure[1]) * exposure
+
+    def next_class(self):
+        self.exposure[0] = self.exposure[1]
+
+    def get_exposure(self):
+        return self.exposure[0]
+>>>>>>> 6bce537f1e26942111970d6b4ef165d335212b4d
