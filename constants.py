@@ -6,15 +6,14 @@ class Occupation(Enum):
     Teacher = 1
     TA = 2
 
-# randomly chosen
 CLASS_EXPOSURE_FACTOR = 1.0
 EC_EXPOSURE_FACTOR = 1.1
-TRANSITION_EXPOSURE_FACTOR = 0.9
+TRANSITION_EXPOSURE_FACTOR = 5.0 / 45.0 * CLASS_EXPOSURE_FACTOR
 
 AVERAGE_TEACHER_AGE = 40
 AVERAGE_TA_AGE = 21
 
-BASELINE_EXPOSURE_FACTOR = 1.0
+BASELINE_EXPOSURE_FACTOR = 0.03
 
 # Chance each occupation exposes another
 # First index from, second index to
@@ -37,7 +36,6 @@ OCCUPATIONAL_EXPOSURE_MATRIX = {
     }
 
 R_0 = 3
-AVERAGE_EXPOSURES = 100
 NUM_PERIODS = (6 * 2) + 1 # 4 classes, lunch, ecs, transitions between, before, and after
 
 CLASSES = [

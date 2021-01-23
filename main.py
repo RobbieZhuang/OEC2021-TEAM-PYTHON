@@ -72,8 +72,13 @@ def load_population():
                         # print(p)
     return students + teachers + tas
 
+def print_results(people):
+    for p in people:
+        print('%030s: %5.2f' % (p.firstname + ' ' + p.lastname, 100 * p.exposure[1]))
 
 if __name__ == "__main__":
     population = load_population()
     exposures = initialize_exposures()
     run_simulation(exposures, population)
+
+    print_results(population)
