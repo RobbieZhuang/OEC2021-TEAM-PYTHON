@@ -10,7 +10,7 @@ from constants import *
 # Reads a CSV into a pandas DataFrame
 def read_from_csv(filename):
     ir_path = os.path.dirname(os.path.realpath(__file__))
-    df = pd.read_csv(ir_path + filename)
+    df = pd.read_csv(ir_path + '/' + filename)
     return df.where(pd.notnull(df), None)
 
 
@@ -23,7 +23,7 @@ def get_classes(dfrow, periods=4):
 
 
 # Parses a CSV of students and returns the object representation
-def get_students(filename="/tests/students.csv"):
+def get_students(filename="tests/students.csv"):
     df = read_from_csv(filename)
     students = []
     # Iterate over pandas dataframe
@@ -74,7 +74,7 @@ def get_students(filename="/tests/students.csv"):
 
 
 # Parses a CSV of teachers and returns the object representation
-def get_teachers(filename="/tests/teachers.csv"):
+def get_teachers(filename="tests/teachers.csv"):
     df = read_from_csv(filename)
     teachers = []
     for idx, row in df.iterrows():
@@ -102,7 +102,7 @@ def get_teachers(filename="/tests/teachers.csv"):
 
 
 # Parses a CSV of infected people and returns the object representation
-def get_infects(filename="/tests/infects.csv"):
+def get_infects(filename="tests/infects.csv"):
     df = read_from_csv(filename)
     infects = []
     for idx, row in df.iterrows():
@@ -115,7 +115,7 @@ def get_infects(filename="/tests/infects.csv"):
 
 
 # Parses a CSV of TAs and returns the object representation
-def get_tas(filename="/tests/tas.csv"):
+def get_tas(filename="tests/tas.csv"):
     df = read_from_csv(filename)
     tas = []
     for idx, row in df.iterrows():
