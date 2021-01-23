@@ -1,9 +1,9 @@
 from constants import *
 from exposure import ExposureChance
 
+
 def initialize_exposures():
     exposures = {}
-
     for c in CLASSES:
         exposures[c] = ExposureChance(c, CLASS_EXPOSURE_FACTOR)
         transition = c + ' Transition'
@@ -47,5 +47,3 @@ def show_exposures():
     pass
 
 
-
-    
