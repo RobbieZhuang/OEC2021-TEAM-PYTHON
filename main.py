@@ -101,11 +101,13 @@ def show_graphs(people):
 if __name__ == "__main__":
     population = load_population()
     exposures = initialize_exposures()
-    people_trace = run_simulation(exposures, population, [])
+    people_trace = run_simulation(exposures, population, [s for s in population if 'Karl' == s.firstname and 'Hackett' == s.lastname])
 
     print_results(population)
-    for p in people_trace:
-        print(f"        {p.firstname} {p.lastname}'s trace")
-        print(people_trace[p])
-
     show_graphs(population)
+    for p in people_trace:
+        print(f"    {p.firstname} {p.lastname}'s trace")
+        for i in range(NUM_PERIODS):
+            print(f"        Time Period {i + 1} | Exposure: {people_trace[p][i][0]}")
+            for other in people_trace[p][i][1]:
+                print(f"            {other}: {people_trace[p][i][1][other]}")
