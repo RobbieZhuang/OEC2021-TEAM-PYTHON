@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 from person import Person
+from constants import *
 
 
 def read_from_csv(filename):
@@ -22,16 +23,39 @@ def get_students(filename="/tests/students.csv"):
     students = []
     for idx, row in df.iterrows():
         classes = get_classes(row)
+        schedule = []
+
+        classes.insert(2, f'Gr {row["Grade"]} Lunch')
+
+        for i in range(len(classes)):
+            transition = []
+            if i > 0:
+                transition.append(f'{classes[i - 1]} Transition')
+            transition.append(f'{classes[i]} Transition')
+            schedule.append(transition)
+
+            schedule.append([classes[i]])
+
+            if i == len(classes) - 1:
+                schedule.append([f'{classes[i]} Transition'])
+
         ecs = None
         if row["Extracurricular Activities"] is not None:
             ecs = row["Extracurricular Activities"].split(",")
+
+        if ecs:
+            for ec in ecs:
+                schedule[-1].append(f'{ec} Transition')
+            schedule.append(ecs)
+            schedule.append([ec + ' Transition' for ec in ecs])
+
         student = Person(
-            Person.Occupation.Student,
+            Occupation.Student,
             row["Student Number"],
             row["First Name"],
             row["Last Name"],
             row["Grade"],
-            classes,
+            schedule,
             health_conditions=row["Health Conditions"],
             ecs=ecs,
         )
@@ -46,7 +70,7 @@ def get_teachers(filename="/tests/teachers.csv"):
     for idx, row in df.iterrows():
         classes = [row["Class"]]
         teach = Person(
-            Person.Occupation.Teacher,
+            Occupation.Teacher,
             row["Teacher Number"],
             row["First Name"],
             row["Last Name"],
@@ -63,7 +87,7 @@ def get_infects(filename="/tests/infects.csv"):
     grade = -1
     for idx, row in df.iterrows():
         infected = Person(
-            Person.Occupation.Student,
+            Occupation.Student,
             row["Student ID"],
             row["First Name"],
             row["Last Name"],
@@ -81,7 +105,7 @@ def get_tas(filename="/tests/tas.csv"):
     for idx, row in df.iterrows():
         classes = get_classes(row)
         ta = Person(
-            Person.Occupation.TA, -1, row["First Name"], row["Last Name"], -1, classes
+            Occupation.TA, -1, row["First Name"], row["Last Name"], -1, classes
         )
         tas.append(ta)
     return tas
@@ -89,3 +113,4 @@ def get_tas(filename="/tests/tas.csv"):
 
 if __name__ == "__main__":
     print(get_tas()[0])
+    print(get_students()[0])

@@ -1,18 +1,18 @@
 from constants import *
 from exposure import ExposureChance
 
-
 def initialize_exposures():
     exposures = {}
+
     for c in CLASSES:
         exposures[c] = ExposureChance(c, CLASS_EXPOSURE_FACTOR)
         transition = c + ' Transition'
-        exposures[transition] = ExposureChance(transition, TRANSITION_EXPOSURE_FACTOR)
+        exposures[transition] = ExposureChance(transition, TRANSITION_EXPOSURE_FACTOR, False)
 
     for ec in ECS:
         exposures[ec] = ExposureChance(ec, EC_EXPOSURE_FACTOR)
         transition = ec + ' Transition'
-        exposures[transition] = ExposureChance(transition, TRANSITION_EXPOSURE_FACTOR)
+        exposures[transition] = ExposureChance(transition, TRANSITION_EXPOSURE_FACTOR, False)
 
     return exposures
     
@@ -47,3 +47,5 @@ def show_exposures():
     pass
 
 
+
+    

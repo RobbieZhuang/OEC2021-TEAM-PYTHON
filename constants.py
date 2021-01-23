@@ -1,5 +1,10 @@
-from person import Person.Type as Type
 from itertools import product
+from enum import Enum
+
+class Occupation(Enum):
+    Student = 0
+    Teacher = 1
+    TA = 2
 
 # randomly chosen
 CLASS_EXPOSURE_FACTOR = 1.0
@@ -8,10 +13,11 @@ EC_EXPOSURE_FACTOR = 1.1
 # transitions are only 5mins while classes are 45mins
 TRANSITION_EXPOSURE_FACTOR = 5.0 / 45.0 * CLASS_EXPOSURE_FACTOR
 
+# students more likely to interact with one another
 PERSONAL_EXPOSURE_FACTORS = {
-    Type.Student: 1.0,
-    Type.Teacher: 0.8,
-    Type.TA: 0.9,
+    Occupation.Student: 1.0,
+    Occupation.Teacher: 0.8,
+    Occupation.TA: 0.9,
 }
 
 AVERAGE_TEACHER_AGE = 40
