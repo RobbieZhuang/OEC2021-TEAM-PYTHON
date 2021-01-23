@@ -11,6 +11,9 @@ CLASS_EXPOSURE_FACTOR = 1.0
 EC_EXPOSURE_FACTOR = 1.1
 TRANSITION_EXPOSURE_FACTOR = 0.9
 
+AVERAGE_TEACHER_AGE = 40
+AVERAGE_TA_AGE = 21
+
 # students more likely to interact with one another
 PERSONAL_EXPOSURE_FACTORS = {
     Occupation.Student: 1.0,
