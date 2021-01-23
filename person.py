@@ -49,7 +49,10 @@ class Person:
         )
 
     def expose(self, exposure):
-        self.exposure = (self.exposure[0], min(1.0, self.exposure[1] + (1 - self.exposure[1]) * exposure * self.exposure_factor))
+        old = self.exposure[1]
+        diff = (1 - self.exposure[1]) * exposure * self.exposure_factor
+        self.exposure = (self.exposure[0], min(1.0, self.exposure[1] + diff))
+        return self.exposure[1] - old
 
     def next_class(self):
         self.exposure = (self.exposure[1], self.exposure[1])

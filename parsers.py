@@ -42,6 +42,8 @@ def get_students(filename="/tests/students.csv"):
         ecs = None
         if row["Extracurricular Activities"] is not None:
             ecs = row["Extracurricular Activities"].split(",")
+        if ecs and len(ecs) > 1:
+            ecs = [ecs[0]]
 
         if ecs:
             for ec in ecs:

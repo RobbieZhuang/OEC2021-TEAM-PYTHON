@@ -36,7 +36,7 @@ def initialize_exposures():
 #     for ec in ECS:
 #         period_set[ec] = get_class_set(ec, period, students)
 
-def get_exposure_sets(exposures, people, period):
+def get_exposure_sets(people, period):
     sets = defaultdict(set)
     for p in people:
         if period >= len(p.schedule):
@@ -47,7 +47,11 @@ def get_exposure_sets(exposures, people, period):
     
 def run_simulation(exposures, people):
     for p in range(NUM_PERIODS):
-        sets = get_exposure_sets(exposures, people, p)
+        if p == LUNCH_PERIOD:
+            for e in exposures.values():
+                e.clean()
+
+        sets = get_exposure_sets(people, p)
         for exposure_name, people_exposed in sets.items():
             exposures[exposure_name].calculate_exposure(list(people_exposed))
 
@@ -81,4 +85,4 @@ if __name__ == "__main__":
     exposures = initialize_exposures()
     run_simulation(exposures, population)
 
-    print_results(population)
+    #print_results(population)

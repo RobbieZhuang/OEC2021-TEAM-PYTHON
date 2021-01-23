@@ -37,6 +37,7 @@ OCCUPATIONAL_EXPOSURE_MATRIX = {
 
 R_0 = 3
 NUM_PERIODS = (6 * 2) + 1 # 4 classes, lunch, ecs, transitions between, before, and after
+LUNCH_PERIOD = 5
 
 CLASSES = [
     f"{cl} {sec}"
