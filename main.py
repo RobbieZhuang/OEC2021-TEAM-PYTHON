@@ -45,7 +45,7 @@ def group_by_last_name(people):
     return sets
 
 
-def run_simulation(exposures, people):
+def run_simulation(exposures, people, follow_people):
     people_trace = defaultdict(list)
     for p in range(NUM_PERIODS):
         if p == LUNCH_PERIOD:
@@ -61,7 +61,6 @@ def run_simulation(exposures, people):
     last_name_grps = group_by_last_name(people)
     for grp in group_by_last_name(people).values():
         exposures["Last Name"].calculate_exposure(list(grp))
-        people_trace[p].append((p.exposure[1], p.trace))
     return people_trace
 
 
