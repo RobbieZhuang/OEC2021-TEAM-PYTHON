@@ -1,4 +1,4 @@
-# from constants import *
+from constants import *
 from exposure import ExposureChance
 import parsers
 
@@ -40,33 +40,21 @@ def get_class_sets_for_period(period, students):
 
 def get_class_sets(students):
     sets = {}
-    for p in range(13):
+    for p in range(NUM_PERIODS):
         sets[p] = get_class_sets_for_period(p, students)
     return sets
 
 
 def run_simluation(exposures, students):
-    def have_class():
-        for e in exposures:
-            pass
-        period_transition()
-
-    def ecs():
-        period_transition()
-
-    def lunch():
-        period_transition()
-
     class_sets = get_class_sets()
-
-    period_transition()
-    have_class()
-    have_class()
-    lunch()
-    have_class()
-    have_class()
-    ecs()
-
+    transition = True
+    for p in range(NUM_PERIODS):
+        for class_ in class_sets[p]:
+            if transition:
+                exposures[class_ + ' Transition'].calculate_exposure(class_sets[p][class_])
+            else:
+                exposures[class_].calculate_exposure(class_sets[p][class_])
+        transition ^= True
 
 def load_population():
     students = parsers.get_students()
