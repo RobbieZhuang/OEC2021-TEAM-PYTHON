@@ -73,3 +73,9 @@ ECS = [
     "Baseball",
     "Drama Club"
 ]
+
+
+## UI Constants
+WINDOW_SIZE = 1000
+VISUALIZATIONS_ENABLED = True
+SPEED = 1

@@ -12,7 +12,8 @@ class Person:
         schedule,
         health_conditions=None,
         ecs=None,
-        initial_exposure=0.0
+        initial_exposure=0.0,
+        location_in_ui=[500,500],
     ):
         self.occupation = occupation
         self.id = id
@@ -34,6 +35,8 @@ class Person:
 
         health_exposure_factor = 1.7 if self.health_conditions else 1.0
         self.exposure_factor = BASELINE_EXPOSURE_FACTOR * health_exposure_factor * (1 + (self.age / 4))
+
+        self.location_in_ui = location_in_ui
 
     def __str__(self):
         return "Id-{}, Ou-{}, Na-{} {}, Age-{}. Sch-{}, He-{}, Ecs-{}, Inf-{}".format(
