@@ -1,7 +1,8 @@
+from collections import defaultdict
 from constants import *
 
-class Person:
 
+class Person:
     def __init__(
         self,
         occupation: Occupation,
@@ -22,39 +23,49 @@ class Person:
         self.schedule = schedule
         self.health_conditions = health_conditions
         self.ecs = ecs
+        self.grade = grade
 
         # Previous, current exposure
         self.exposure = (initial_exposure, initial_exposure)
 
-        if occupation == Occupation.Student:
-            self.age = grade + 5
-        elif occupation == Occupation.Teacher:
-            self.age = AVERAGE_TEACHER_AGE
-        elif occupation == Occupation.TA:
-            self.age = AVERAGE_TA_AGE
-
         health_exposure_factor = 1.7 if self.health_conditions else 1.0
-        self.exposure_factor = BASELINE_EXPOSURE_FACTOR * health_exposure_factor * (1 + (self.age / 4))
+        age_exposure_factor = 1.0 if grade is None else 1.0 + ((grade - 9) / 4.0)
+        self.exposure_factor = (
+            BASELINE_EXPOSURE_FACTOR * health_exposure_factor * age_exposure_factor
+        )
+        self.trace = defaultdict(int)
 
         self.location_in_ui = location_in_ui
 
     def __str__(self):
-        return "Id-{}, Ou-{}, Na-{} {}, Age-{}. Sch-{}, He-{}, Ecs-{}, Inf-{}".format(
+        return "Id-{}, Ou-{}, Na-{} {}, Gr-{}. Sch-{}, He-{}, Ecs-{}, Inf-{}".format(
             self.id,
             self.occupation,
             self.firstname,
             self.lastname,
-            self.age,
+            self.grade,
             self.schedule,
             self.health_conditions,
             self.ecs,
-            self.exposure
+            self.exposure,
         )
 
-    def expose(self, exposure):
-        self.exposure = (self.exposure[0], min(1.0, self.exposure[1] + (1 - self.exposure[1]) * exposure * self.exposure_factor))
+    def expose(self, exposure, person=""):
+        old = self.exposure[1]
+        self.exposure = (
+            self.exposure[0],
+            min(
+                1.0,
+                self.exposure[1]
+                + (1 - self.exposure[1]) * exposure * self.exposure_factor,
+            ),
+        )
+        if (self.exposure[1] - old) > 0.00001:
+            self.trace[person] += (self.exposure[1] - old)
+        return self.exposure[1] - old
 
     def next_class(self):
+        self.trace = defaultdict(int)
         self.exposure = (self.exposure[1], self.exposure[1])
 
     def get_exposure(self):
@@ -65,5 +76,9 @@ class Person:
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.id == other.id and self.firstname == other.firstname and self.lastname == other.lastname
+            return (
+                self.id == other.id
+                and self.firstname == other.firstname
+                and self.lastname == other.lastname
+            )
         return False

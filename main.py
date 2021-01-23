@@ -5,12 +5,22 @@ import parsers
 import pygame
 import random
 import math
+from graph import Graph
+
+student_inf_over_time = Graph('Average Student Infection Over Time')
+infection_over_time = Graph('Average Infection Over Time')
+classroom_infection_over_time = Graph('Average Classroom Infection Over Time')
 
 def initialize_exposures():
     exposures = {}
 
     for c in CLASSES:
-        exposures[c] = ExposureChance(c, CLASS_EXPOSURE_FACTOR)
+        if 'TA Lunch' in c:
+            exposures[c] = ExposureChance(c, TA_LUNCH_EXPOSURE_FACTOR)
+        elif 'Lunch' in c:
+            exposures[c] = ExposureChance(c, LUNCH_EXPOSURE_FACTOR)
+        else:
+            exposures[c] = ExposureChance(c, CLASS_EXPOSURE_FACTOR)
         transition = c + " Transition"
         exposures[transition] = ExposureChance(
             transition, TRANSITION_EXPOSURE_FACTOR, False
@@ -23,22 +33,14 @@ def initialize_exposures():
             transition, TRANSITION_EXPOSURE_FACTOR, False
         )
 
+    exposures["Last Name"] = ExposureChance(
+        "Last Name", LAST_NAME_EXPOSURE_FACTOR, False
+    )
+
     return exposures
 
-# def get_class_set(class_, period, students):
-#     class_set = []
-#     for s in students:
-#         if class_ in s.schedule[period]:
-#             class_set.append(s)
-#
-# def get_class_sets_for_period(period, students):
-#     period_set = {}
-#     for c in CLASSES:
-#         period_set[c] = get_class_set(c, period, students)
-#     for ec in ECS:
-#         period_set[ec] = get_class_set(ec, period, students)
 
-def get_exposure_sets(exposures, people, period):
+def get_exposure_sets(people, period):
     sets = defaultdict(set)
     for p in people:
         if period >= len(p.schedule):
@@ -116,36 +118,105 @@ def animate(population, cur_period, class_locations, screen):
 
     # Transition students to the new room in the given period
 
-def run_simulation(exposures, people):
+def group_by_last_name(people):
+    sets = defaultdict(set)
+    for p in people:
+        sets[p.lastname].add(p)
+    return sets
+
+
+def update_graphs(time, exposures, people):
+    all_inf = [person.exposure[1] for person in people]
+    teach_inf = [person.exposure[1] for person in people if person.occupation == Occupation.Teacher]
+    ta_inf = [person.exposure[1] for person in people if person.occupation == Occupation.TA]
+    stud_inf = [person.exposure[1] for person in people if person.occupation == Occupation.Student]
+
+    infection_over_time.add_point(time, {
+        'all': sum(all_inf) / len(all_inf),
+        'teachers': sum(teach_inf) / len(teach_inf),
+        'TAs': sum(ta_inf) / len(ta_inf),
+        'students': sum(stud_inf) / len(stud_inf),
+        })
+
+    gr_9 = [person.exposure[1] for person in people if person.grade == 9]
+    gr_10 = [person.exposure[1] for person in people if person.grade == 10]
+    gr_11 = [person.exposure[1] for person in people if person.grade == 11]
+    gr_12 = [person.exposure[1] for person in people if person.grade == 12]
+
+    student_inf_over_time.add_point(time, {
+        'Gr 9': sum(gr_9) / len(gr_9),
+        'Gr 10': sum(gr_10) / len(gr_10),
+        'Gr 11': sum(gr_11) / len(gr_11),
+        'Gr 12': sum(gr_12) / len(gr_12),
+        })
+
+    cl = [e.exposure_factor for e in exposures.values() if e.is_class]
+    classroom_infection_over_time.add_point(time, {
+        'all': sum(cl) / len(cl)
+        })
+
+
+def run_simulation(exposures, people, follow_people):
     if VISUALIZATIONS_ENABLED:
+        people_trace = defaultdict(list)
+
+        ### Start of UI Code
         pygame.init()
-
         screen = pygame.display.set_mode([WINDOW_SIZE, WINDOW_SIZE])
-
         init_ui(screen)
         class_locations = get_class_locations()
-
+        print("RBZ", "Hallening")
         sim_running = True
+        # Game Loop
         while sim_running:
-
             for p in range(NUM_PERIODS):
-                sets = get_exposure_sets(exposures, people, p)
+                if p == LUNCH_PERIOD:
+                    for e in exposures.values():
+                        e.clean()
+
+                update_graphs(START_TIMES[p], exposures, people)
+
+                sets = get_exposure_sets(people, p)
                 for exposure_name, people_exposed in sets.items():
                     exposures[exposure_name].calculate_exposure(list(people_exposed))
 
-                ### Graphics rendering
+                for p in follow_people:
+                    people_trace[p].append((p.exposure[1], p.trace))
+
+                ### UI Updates
+                # Detect close from window
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         sim_running = False
-
+                # Render current state
                 animate(population, p, class_locations, screen)
 
+        # Quit window
         pygame.quit()
+
+        last_name_grps = group_by_last_name(people)
+        for grp in group_by_last_name(people).values():
+            exposures["Last Name"].calculate_exposure(list(grp))
+        return people_trace
     else:
+        people_trace = defaultdict(list)
         for p in range(NUM_PERIODS):
-            sets = get_exposure_sets(exposures, people, p)
+            if p == LUNCH_PERIOD:
+                for e in exposures.values():
+                    e.clean()
+
+            update_graphs(START_TIMES[p], exposures, people)
+
+            sets = get_exposure_sets(people, p)
             for exposure_name, people_exposed in sets.items():
                 exposures[exposure_name].calculate_exposure(list(people_exposed))
+            for p in follow_people:
+                people_trace[p].append((p.exposure[1], p.trace))
+
+        last_name_grps = group_by_last_name(people)
+        for grp in group_by_last_name(people).values():
+            exposures["Last Name"].calculate_exposure(list(grp))
+        return people_trace
 
 def load_population():
     students = parsers.get_students()
@@ -168,13 +239,32 @@ def load_population():
                         # print(p)
     return students + teachers + tas
 
+
 def print_results(people):
     for p in people:
-        print('%030s: %5.2f' % (p.firstname + ' ' + p.lastname, 100 * p.exposure[1]))
+        print("%030s: %5.2f" % (p.firstname + " " + p.lastname, 100 * p.exposure[1]))
+
+
+def show_graphs(people):
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    infection_over_time.show()
+    student_inf_over_time.show()
+    classroom_infection_over_time.show()
+
+    plt.show()
 
 if __name__ == "__main__":
     population = load_population()
     exposures = initialize_exposures()
-    run_simulation(exposures, population)
+    people_trace = run_simulation(exposures, population, [])
 
     print_results(population)
+    show_graphs(population)
+    for p in people_trace:
+        print(f"    {p.firstname} {p.lastname}'s trace")
+        for i in range(NUM_PERIODS):
+            print(f"        Time Period {i + 1} | Exposure: {people_trace[p][i][0]}")
+            for other in people_trace[p][i][1]:
+                print(f"            {other}: {people_trace[p][i][1][other]}")
