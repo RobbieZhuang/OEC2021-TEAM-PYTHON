@@ -9,7 +9,7 @@ class Occupation(Enum):
 
 
 CLASS_EXPOSURE_FACTOR = 1.0
-LUNCH_EXPOSURE_FACTOR = 0.5 # People usually separate into small groups, so they are unlikely to all interact
+LUNCH_EXPOSURE_FACTOR = 0.3 # People usually separate into small groups, so they are unlikely to all interact
 TA_LUNCH_EXPOSURE_FACTOR = 0.0 # TAs eat alone apparently
 EC_EXPOSURE_FACTOR = 1.1
 TRANSITION_EXPOSURE_FACTOR = 5.0 / 45.0 * CLASS_EXPOSURE_FACTOR
@@ -18,7 +18,7 @@ LAST_NAME_EXPOSURE_FACTOR = 1.3
 #AVERAGE_TEACHER_AGE = 40
 #AVERAGE_TA_AGE = 21
 
-BASELINE_EXPOSURE_FACTOR = 0.3
+BASELINE_EXPOSURE_FACTOR = 1.0
 
 # Chance each occupation exposes another
 # First index from, second index to

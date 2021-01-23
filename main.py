@@ -9,6 +9,8 @@ import time
 import sys
 from copy import deepcopy
 from graph import Graph
+import matplotlib.pyplot as plt
+import numpy as np
 
 student_inf_over_time = Graph('Average Student Infection Over Time')
 infection_over_time = Graph('Average Infection Over Time')
@@ -196,10 +198,6 @@ def run_simulation(exposures, people, follow_people):
             animate(population, p, class_locations, screen)
             time.sleep(1)
 
-    if VISUALIZATIONS_ENABLED:
-        # Quit window
-        pygame.quit()
-
     last_name_grps = group_by_last_name(people)
     for grp in group_by_last_name(people).values():
         exposures["Last Name"].calculate_exposure(list(grp))
@@ -233,9 +231,6 @@ def print_results(people):
 
 
 def show_graphs(people):
-    import matplotlib.pyplot as plt
-    import numpy as np
-
     infection_over_time.show()
     student_inf_over_time.show()
     classroom_infection_over_time.show()
@@ -255,3 +250,7 @@ if __name__ == "__main__":
             print(f"        Time Period {i + 1} | Exposure: {people_trace[p][i][0]}")
             for other in people_trace[p][i][1]:
                 print(f"            {other}: {people_trace[p][i][1][other]}")
+
+    if VISUALIZATIONS_ENABLED:
+        # Quit window
+        pygame.quit()
