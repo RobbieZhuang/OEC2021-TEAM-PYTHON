@@ -21,6 +21,10 @@ def initialize_exposures():
             transition, TRANSITION_EXPOSURE_FACTOR, False
         )
 
+    exposures["Last Name"] = ExposureChance(
+        "Last Name", LAST_NAME_EXPOSURE_FACTOR, False
+    )
+
     return exposures
 
 
@@ -34,7 +38,14 @@ def get_exposure_sets(people, period):
     return sets
 
 
-def run_simulation(exposures, people, follow_people = []):
+def group_by_last_name(people):
+    sets = defaultdict(set)
+    for p in people:
+        sets[p.lastname].add(p)
+    return sets
+
+
+def run_simulation(exposures, people):
     people_trace = defaultdict(list)
     for p in range(NUM_PERIODS):
         if p == LUNCH_PERIOD:
@@ -46,6 +57,11 @@ def run_simulation(exposures, people, follow_people = []):
             exposures[exposure_name].calculate_exposure(list(people_exposed))
         for p in follow_people:
             people_trace[p].append((p.exposure[1], p.trace))
+    
+    last_name_grps = group_by_last_name(people)
+    for grp in group_by_last_name(people).values():
+        exposures["Last Name"].calculate_exposure(list(grp))
+        people_trace[p].append((p.exposure[1], p.trace))
     return people_trace
 
 
