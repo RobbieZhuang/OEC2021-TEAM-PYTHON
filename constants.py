@@ -4,7 +4,9 @@ from itertools import product
 # randomly chosen
 CLASS_EXPOSURE_FACTOR = 1.0
 EC_EXPOSURE_FACTOR = 1.1
-TRANSITION_EXPOSURE_FACTOR = 0.9
+
+# transitions are only 5mins while classes are 45mins
+TRANSITION_EXPOSURE_FACTOR = 5.0 / 45.0 * CLASS_EXPOSURE_FACTOR
 
 PERSONAL_EXPOSURE_FACTORS = {
     Type.Student: 1.0,

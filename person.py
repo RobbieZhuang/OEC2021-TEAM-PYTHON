@@ -1,3 +1,4 @@
+from contsants import *
 from enum import Enum
 
 class Person
@@ -8,7 +9,8 @@ class Person
         TA = 2
 
     def __init__(self, type: Type, id: int, firstname: str, lastname: str,
-            grade: int, schedule: list[str], health_conditions=None, ecs=None):
+            grade: int, schedule, health_conditions=None, ecs=None,
+            initial_exposure=0.0):
         self.type = type
         self.id = id
         self.firstname = firstname
@@ -19,9 +21,11 @@ class Person
         self.ecs = ecs
 
         # Previous, current exposure
-        self.exposure = (0, 0)
+        self.exposure = (initial_exposure, initial_exposure)
 
-        self.exposure_factor
+        self.age 
+
+        self.exposure_factor = PERSONAL_EXPOSURE_FACTORS[type]
 
     def expose(self, exposure):
         self.exposure[1] += (1 - self.exposure[1]) * exposure
