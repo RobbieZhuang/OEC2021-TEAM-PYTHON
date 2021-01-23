@@ -15,30 +15,49 @@ def initialize_exposures():
         exposures[transition] = ExposureChance(transition, TRANSITION_EXPOSURE_FACTOR, False)
 
     return exposures
+
+def get_class_set(class, period, students):
+    class_set = []
+    for s in students:
+        if class in s.schedule[period]:
+            class_set.append(s)
+
+def get_class_sets_for_period(period, students):
+    period_set = {}
+    for c in CLASSES:
+        period_set[c] = get_class_set(c, period, students)
+    for ec in ECS:
+        period_set[ec] = get_class_set(ec, period, students)
+
+def get_class_sets(students):
+    sets = {}
+    for p in range(13):
+        sets[p] = get_class_sets_for_period(p, students)
+    return sets
     
 def run_simluation(exposures, students):
     def have_class():
         for e in exposures:
-            
+            pass
+        period_transition()
 
     def ecs():
-        pass
+        period_transition()
+
+    def lunch():
+        period_transition()
 
     def period_transition():
         pass
 
-    def lunch():
-        pass
+    class_sets = get_class_sets()
 
-    have_class()
     period_transition()
     have_class()
-    period_transition()
+    have_class()
     lunch()
     have_class()
-    period_transition()
     have_class()
-    period_transition()
     ecs()
 
     show_exposures()
