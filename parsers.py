@@ -72,7 +72,7 @@ def get_teachers(filename="/tests/teachers.csv"):
         schedule = [[]]
         for i in range(5):
             # Teachers always teach the same class every period
-            schedule.append([classes[0]])
+            schedule.append([cl])
 
             # Teachers don't transition
             schedule.append([])

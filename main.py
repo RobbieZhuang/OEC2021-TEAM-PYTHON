@@ -39,15 +39,17 @@ def initialize_exposures():
 def get_exposure_sets(exposures, people, period):
     sets = defaultdict(set)
     for p in people:
-        for e in p.schedule:
+        if period >= len(p.schedule):
+            continue
+        for e in p.schedule[period]:
             sets[e].add(p)
     return sets
     
-def run_simluation(exposures, people):
+def run_simulation(exposures, people):
     for p in range(NUM_PERIODS):
-        sets = get_exposure_sets(exposures, people, period)
+        sets = get_exposure_sets(exposures, people, p)
         for exposure_name, people_exposed in sets.items():
-            exposures[exposure_name].calculate_exposure(people_exposed)
+            exposures[exposure_name].calculate_exposure(list(people_exposed))
 
 def load_population():
     students = parsers.get_students()

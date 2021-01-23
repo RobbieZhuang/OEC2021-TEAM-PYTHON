@@ -14,6 +14,8 @@ TRANSITION_EXPOSURE_FACTOR = 0.9
 AVERAGE_TEACHER_AGE = 40
 AVERAGE_TA_AGE = 21
 
+BASELINE_EXPOSURE_FACTOR = 1.0
+
 # Chance each occupation exposes another
 # First index from, second index to
 OCCUPATIONAL_EXPOSURE_MATRIX = {
@@ -22,7 +24,7 @@ OCCUPATIONAL_EXPOSURE_MATRIX = {
             Occupation.Teacher: 0.7,
             Occupation.TA: 0.8
         },
-        Occupation.Teacher: {,
+        Occupation.Teacher: {
             Occupation.Student: 0.7,
             Occupation.Teacher: 1.0,
             Occupation.TA: 1.5
@@ -58,6 +60,7 @@ CLASSES = [
 ]
 
 CLASSES.extend([f'Gr {gr} Lunch' for gr in range(9, 13)])
+CLASSES.append('TA Lunch')
 
 ECS = [
     "Board Game Club",
@@ -70,4 +73,5 @@ ECS = [
     "Basketball",
     "Badminton",
     "Baseball",
+    "Drama Club"
 ]
