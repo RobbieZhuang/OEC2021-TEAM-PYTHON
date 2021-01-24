@@ -9,9 +9,9 @@ class Occupation(Enum):
 
 
 CLASS_EXPOSURE_FACTOR = 1.0
+EC_EXPOSURE_FACTOR = 1.1 # People are more likely to interact with each other during an ec
 LUNCH_EXPOSURE_FACTOR = 0.3 # People usually separate into small groups, so they are unlikely to all interact
 TA_LUNCH_EXPOSURE_FACTOR = 0.0 # TAs eat alone apparently
-EC_EXPOSURE_FACTOR = 1.1
 TRANSITION_EXPOSURE_FACTOR = 5.0 / 45.0 * CLASS_EXPOSURE_FACTOR
 LAST_NAME_EXPOSURE_FACTOR = 1.3
 
@@ -60,6 +60,7 @@ for i in range(NUM_PERIODS):
 
     _transition = not _transition
 
+# Class sections
 CLASSES = [
     f"{cl} {sec}"
     for cl, sec in product(
@@ -79,6 +80,7 @@ CLASSES = [
     )
 ]
 
+# Separating lunches for grades to separate exposure per grade
 CLASSES.extend([f"Gr {gr} Lunch" for gr in range(9, 13)])
 CLASSES.append("TA Lunch")
 
