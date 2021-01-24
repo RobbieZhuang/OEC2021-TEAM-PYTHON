@@ -4,7 +4,7 @@ Prereqs: pygame, matplotlib, pandas
 `pip3 install pygame && pip3 install matplotlib && pip3 install pandas`
 
 ```
-usage: main.py [-h] [--students FILE] [--teachers FILE] [--tas FILE] [--infects FILE] [-v]
+usage: python3 main.py [-h] [--students FILE] [--teachers FILE] [--tas FILE] [--infects FILE] [-v]
 
 Simulate transmission of ZBY1 in a school
 
