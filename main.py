@@ -20,6 +20,7 @@ classroom_infection_over_time = Graph('Average Classroom Infection Over Time')
 def initialize_exposures():
     exposures = {}
 
+    # Create ExposureChances: these are 'rooms' that the virus could spread in
     for c in CLASSES:
         if 'TA Lunch' in c:
             exposures[c] = ExposureChance(c, TA_LUNCH_EXPOSURE_FACTOR)
@@ -45,7 +46,7 @@ def initialize_exposures():
 
     return exposures
 
-
+# Get the people in each ExposureChance for a given period 
 def get_exposure_sets(people, period):
     sets = defaultdict(set)
     for p in people:

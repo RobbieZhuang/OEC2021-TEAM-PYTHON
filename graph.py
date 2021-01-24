@@ -17,6 +17,7 @@ class Graph():
             self.data[name].x.append(x)
             self.data[name].y.append(y)
 
+    # display graph on screen
     def show(self):
         plt.figure()
         plt.title(self.name)
