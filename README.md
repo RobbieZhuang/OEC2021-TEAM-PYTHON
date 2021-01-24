@@ -19,6 +19,7 @@ optional arguments:
 
 After running, a few graphs summarizing the result of the simulation over time should display
 
+Demo: https://www.youtube.com/watch?v=iRJgq1vo3ow
 
 Developer Documentation: Modules
 ---
